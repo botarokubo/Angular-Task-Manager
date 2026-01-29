@@ -1,0 +1,12 @@
+<h2>Tasks Page</h2>
+
+<button (click)="addTask()">Add Task</button>
+
+<ul>
+  <li *ngFor="let task of tasks">
+    <input type="checkbox" [(ngModel)]="task.completed" />
+    <span [style.text-decoration]="task.completed ? 'line-through' : 'none'">
+      {{ task.title }}
+    </span>
+  </li>
+</ul>
