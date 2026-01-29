@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { TasksService } from './tasks.service';
 
 @Component({
   selector: 'app-tasks',
@@ -10,14 +11,22 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './tasks.scss',
 })
 export class Tasks {
-  tasks: { title: string; completed: boolean }[] = [
-    { title: 'Test Task', completed: false}
-  ];
+  tasks: { title: string; completed: boolean }[] = [];
+  newTask = '';
+
+  constructor(private taskService: TasksService) {
+    this.tasks = this.taskService.getTasks(); // ✅ now works
+  }
 
   addTask() {
-    this.tasks.push({
-      title: 'Task' + (this.tasks.length + 1),
-      completed: false
-    });
+    if (!this.newTask.trim()) return;
+
+    this.taskService.addTask(this.newTask);
+    this.newTask = '';
+  };
+
+  update() {
+    this.taskService.toggleTasks();
   }
 }
+
