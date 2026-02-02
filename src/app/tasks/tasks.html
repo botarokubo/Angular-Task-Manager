@@ -1,16 +1,75 @@
-<h2>Tasks Page</h2>
+<div class="page">
+  <header class="topbar">
+    <div class="title">
+      <h1>Task Manager</h1>
+      <p>Simple, clean, and persistent.</p>
+    </div>
 
-<input type="text" [(ngModel)]="newTask" placeholder="Enter task name" />
-    <button (click)="addTask()">Add Task</button>
+    <div class="stats">
+      <div class="stat">
+        <span class="num">{{ totalCount }}</span>
+        <span class="label">Total</span>
+      </div>
+      <div class="stat">
+        <span class="num">{{ activeCount }}</span>
+        <span class="label">Active</span>
+      </div>
+      <div class="stat">
+        <span class="num">{{ completedCount }}</span>
+        <span class="label">Done</span>
+      </div>
+    </div>
+  </header>
 
-<ul>
-  <li *ngFor="let task of tasks">
-    
-    <span [style.text-decoration]="task.completed ? 'line-through' : 'none'">
-        <input type="checkbox"
-       [(ngModel)]="task.completed"
-       (change)="update()" />
-      {{ task.title }}
-    </span>
-  </li>
-</ul>
+  <section class="card">
+    <div class="composer">
+      <input
+        type="text"
+        [(ngModel)]="newTask"
+        placeholder="Add a task (e.g., Finish Angular UI)"
+        (keydown.enter)="addTask()"
+      />
+      <button class="btn primary" (click)="addTask()">Add</button>
+    </div>
+
+    <div class="toolbar">
+      <div class="filters">
+        <button class="pill" [class.active]="filter==='all'" (click)="filter='all'">All</button>
+        <button class="pill" [class.active]="filter==='active'" (click)="filter='active'">Active</button>
+        <button class="pill" [class.active]="filter==='completed'" (click)="filter='completed'">Completed</button>
+      </div>
+
+      <button class="btn ghost" (click)="clearCompleted()">
+        Clear completed
+      </button>
+    </div>
+
+    <div class="list" *ngIf="filteredTasks.length; else empty">
+      <div class="item" *ngFor="let task of filteredTasks; let i = index" [class.done]="task.completed">
+        <label class="check">
+          <input type="checkbox" [(ngModel)]="task.completed" (change)="update()" />
+          <span class="box"></span>
+        </label>
+
+        <div class="content">
+          <div class="text">{{ task.title }}</div>
+          <div class="sub">{{ task.completed ? 'Completed' : 'In progress' }}</div>
+        </div>
+
+        <button class="btn danger" (click)="delete(i)">Delete</button>
+      </div>
+    </div>
+
+    <ng-template #empty>
+      <div class="empty">
+        <div class="emoji">🧠</div>
+        <div class="headline">No tasks yet</div>
+        <div class="hint">Add your first task above.</div>
+      </div>
+    </ng-template>
+  </section>
+
+  <footer class="footer">
+    <span>Built with Angular + SCSS</span>
+  </footer>
+</div>

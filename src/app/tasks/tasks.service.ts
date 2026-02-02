@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
 
+export type Task = { title: string; completed: boolean };
+
 @Injectable({
   providedIn: 'root'
 })
 export class TasksService {
 
   private storagekey = 'tasks';
-
-  private tasks: {title: string; completed: boolean}[] = [];
+  private tasks: Task[] = [];
 
   constructor() {
     const saved = localStorage.getItem(this.storagekey);
@@ -27,10 +28,20 @@ export class TasksService {
             title,
             completed: false
         });
+        this.save();
     }
 
     toggleTasks() {
         this.save();
     }
-  
+
+    deleteTask(index: number) {
+        this.tasks.splice(index, 1);
+        this.save();
+    }
+
+    clearCompleted() {
+        this.tasks = this.tasks.filter(t => !t.completed);
+        this.save();
+    }
 }
